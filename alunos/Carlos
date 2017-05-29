@@ -19,12 +19,12 @@ int menu()
     
     printf ("\n\n Informe a opcao da operacao desejada:\n");
     printf(" 1 - Saudação\n");
-    printf(" 2 - Ler Arquivo original\n");
-    printf(" 3 - Escrever em arquivo\n");
+    printf(" 2 - Escrever em arquivo\n");
+    printf(" 3 - Ler Arquivo original\n");
     printf(" 4 - Criptografar\n");
-    printf(" 5 - Decriptografar\n");
-    printf(" 6 - Ler Arquivo Encriptado\n");
-	printf(" 7 - Ler Arquivo DEsencriptado\n");
+    printf(" 5 - Ler Arquivo Encriptado\n");
+    printf(" 6 - Decriptografar\n");
+    printf(" 7 - Ler Arquivo DEsencriptado\n");
     printf(" 0 - Sair\n\n==>");
     
     scanf("%d", &opcao);
@@ -32,11 +32,11 @@ int menu()
  switch(opcao)
  {
  case 1: msg(); menu();
- case 2: LerArquivo(); menu();
- case 3: EscreveArquivo(); menu();
+ case 2: EscreveArquivo(); menu();
+ case 3: LerArquivo(); menu();
  case 4: Criptografar(); menu();
- case 5: Decriptografar(); menu();
- case 6: LerArquivoEncrip(); menu();
+ case 5: LerArquivoEncrip(); menu();
+ case 6: Decriptografar(); menu();
  case 7: LerArquivoDEsencrip(); menu();
  case 0: sair(); menu();
 
@@ -50,6 +50,33 @@ int msg()
  
  printf("\n Olá! Seja(m) bem vindo(s)\n\n");
   
+}
+
+int EscreveArquivo ()
+{
+
+
+	FILE *fp;
+ 	char texto[100];
+ 	int i;
+  
+ 	fp = fopen("original.txt","w");   /* Arquivo ASCII, para leitura e escrita, caso não exista é criado */
+	if(!fp)
+ 
+ {
+    printf( "Erro na abertura do arquivo");
+   exit(0);
+ }
+ 
+ printf("Entre com o texto a ser gravado no arquivo: ");
+ scanf("%s", &texto);
+ 
+ for(i=0; texto[i]; i++) putc(texto[i], fp); /* Grava a string, caractere a caractere */
+ 
+ fclose(fp);
+ 
+ return 0;
+	
 }
 
 int LerArquivo()
@@ -74,34 +101,6 @@ int LerArquivo()
  return 0;
 }
 
-int EscreveArquivo ()
-{
-
-
-	FILE *fp;
- 	char texto[100];
- 	int i;
-  
- 	fp = fopen("original.txt","w");   /* Arquivo ASCII, para leitura e escrita, caso não exista é criado */
-	if(!fp)
- 
- {
-    printf( "Erro na abertura do arquivo");
-   exit(0);
- }
- 
- printf("Entre com o texto a ser gravado no arquivo: ");
- scanf("%s", &texto);
- 
- //gets(string);
- 
- for(i=0; texto[i]; i++) putc(texto[i], fp); /* Grava a string, caractere a caractere */
- 
- fclose(fp);
- 
- return 0;
-	
-}
 
 int Criptografar()
 {
@@ -132,6 +131,28 @@ int Criptografar()
  return 0;
 	
 		
+}
+
+int LerArquivoEncrip()
+{
+	
+	FILE *fp;
+ 	char c;
+ 	
+ fp = fopen("criptografado.txt","r+");   /* Arquivo ASCII, para leitura */
+ if(!fp)
+ 
+ {
+     printf( "Erro na abertura do arquivo");
+     exit(0);
+ }
+ 
+ while((c = getc(fp) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
+    printf(" %c", c);                 /* imprime o caracter lido */
+    
+ fclose(fp);
+ 
+ return 0;
 }
 
 int Decriptografar()
@@ -166,27 +187,6 @@ int Decriptografar()
 	
 }
 
-int LerArquivoEncrip()
-{
-	
-	FILE *fp;
- 	char c;
- 	
- fp = fopen("criptografado.txt","r+");   /* Arquivo ASCII, para leitura */
- if(!fp)
- 
- {
-     printf( "Erro na abertura do arquivo");
-     exit(0);
- }
- 
- while((c = getc(fp) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
-    printf(" %c", c);                 /* imprime o caracter lido */
-    
- fclose(fp);
- 
- return 0;
-}
 
 int LerArquivoDEsencrip()
 {
@@ -217,5 +217,4 @@ int sair()
 	exit(0);
 	
 }
-
 

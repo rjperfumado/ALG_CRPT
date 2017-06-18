@@ -3,269 +3,159 @@
 #include <string.h>
 #include <locale.h>
 
-main()
+#define ENCRYPTION_FORMULA  (int) Byte + 2048
+#define DECRYPTION_FORMULA  (int) Byte - 2048
+
+int Encrypt(char * Arquivo, char * Novo_Arquivo)
 {
- menu();
+		 printf("\nExecutando Encriptação...\n");
+
+		 FILE *inArq;		 		 		 		 		 //Decrlaração do arquivo de entrada
+		 FILE *outArq;		 		 		 		 		 //Decrlaração do arquivo de saída
+
+		 char Byte;
+		 char novoByte;
+		 int n;
+
+
+		 printf("1");
+		 int i=0;
+
+		 inArq = fopen(Arquivo,"rb");
+		 outArq = fopen(Novo_Arquivo, "w");
+
+		 if(inArq==NULL)
+		 		 printf("Error: Não pode abrir arquivo de entrada");
+
+		 if(outArq==NULL)
+		 {
+		 		 printf("Error: Não pode abrir arquivo de saída.");
+		 return 1;
+		 }
+		 else
+		 {
+
+		 		 printf("\nArquivo aberto, Encriptando:\n\n");
+		 		 while(1)
+		 		 {
+		 		 		 printf(".");
+
+
+		 		 		 if(Byte!=EOF)
+		 		 		 {
+		 		 		 		 Byte=fgetc(inArq);
+		 		 				 printf("%d",Byte);
+		 		 		 		 novoByte=Byte+(25 % 256) + 128 ;
+
+		 		 		 		 fputc(novoByte,outArq);
+
+		 		 		 }
+
+		 		 		 else
+		 		 		 {
+		 		 		 		 printf("Fim do arquivo");
+		 		 		 		 break;
+		 		 		 }
+		 		 }
+		 fclose(inArq);
+		 fclose(outArq);
+
+		 }
 }
 
-int menu()
-{ 
+int Decrypt (char *Arquivo, char *Novo_Arquivo) 
+{
+		 printf("\nExecutando Decriptação");
 
-	setlocale(LC_ALL, "portuguese"); //Configuração de acentos
-	
-	int opcao;
+		 FILE *inArq;		 		 		 		 		 //Decrlaração do arquivo de entrada
+		 FILE *outArq;		 		 		 		 		 //Declaração do arquivo de saída
 
- system("cls"); //Limpando a tela
- 
- printf("\n <<<<< Sistema de Gerenciamento Criptográfico - SGC >>>>>");
-    
-    printf ("\n\n Informe a opcao da operacao desejada:\n");
-    printf(" 1 - Saudação\n");
-    printf(" 2 - Escrever em arquivo\n");
-    printf(" 3 - Ler Arquivo original\n");
-    printf(" 4 - Criptografar\n");
-    printf(" 5 - Ler Arquivo Encriptado\n");
-    printf(" 6 - Decriptografar\n");
-    printf(" 7 - Ler Arquivo DEsencriptado\n");
-    printf(" 8 - Converte arquivo para ASCII\n");
-    printf(" 9 - Ler Arquivo ASCII\n");
-    printf(" 0 - Sair\n\n==>");
-    
-    scanf("%d", &opcao);
+		 char Byte;
+		 char novoByte;
+		 printf("2");
+		 int i=0;
 
- switch(opcao)
- {
- case 1: msg(); menu();
- case 2: EscreveArquivo(); //menu();
- case 3: LerArquivo(); menu();
- case 4: Criptografar(); menu();
- case 5: LerArquivoEncrip(); menu();
- case 6: Decriptografar(); menu();
- case 7: LerArquivoDEsencrip(); menu();
- case 8: ConvArquivoASCII(); menu();
- case 9: LerArquivoASCII(); menu();
- case 0: sair(); menu();
+		 inArq = fopen(Arquivo,"rb");
+		 outArq = fopen(Novo_Arquivo, "w");
 
- default: printf("Favor informar a opção correta!\n"); menu();
- }
+		 if(inArq==NULL)
+		 		 printf("Error: Não pode abrir arquivo de entrada");
 
+		 if(outArq==NULL)
+		 {
+		 		 printf("Error: Não pode abrir arquivo de saída.");
+		 return 1;
+		 }
+		 else
+		 {
+
+		 		 printf("\nArqivo aberto, Decriptando:\n\n");
+		 		 while(1)
+		 		 {
+		 		 		 printf(".");
+
+
+		 		 		 if(Byte!=EOF)
+		 		 		 {
+		 		 		 		 Byte=fgetc(inArq);
+		 		 		 		 printf("%d",Byte);
+		 		 		 		 novoByte=Byte-(25 % 256) - 128 ;
+
+		 		 		 		 fputc(novoByte,outArq);
+
+		 		 		 }
+
+		 		 		 else
+		 		 		 {
+		 		 		 		 printf("Fim do arquivo");
+		 		 		 		 break;
+		 		 		 }
+		 		 }
+		 fclose(inArq);
+		 fclose(outArq);
+
+		 }
 }
 
-int msg()
+int main()
 {
- 
- printf("\n Olá! Seja(m) bem vindo(s)\n\n");
-  
-}
-
-int EscreveArquivo ()
-{
-	FILE *fp;
- 	char texto[100];
- 	int i;
-  
- 	fp = fopen("original.txt","w");   /* Arquivo ASCII, para leitura e escrita, caso não exista é criado */
-	if(!fp)
- 
- {
-    printf( "Erro na abertura do arquivo");
-   exit(0);
- }
- 
- printf("Entre com o texto a ser gravado no arquivo: ");
- scanf("%s", &texto);
- 
- for(i=0; texto[i]; i++) putc(texto[i], fp); /* Grava a string, caractere a caractere */
- 
- fclose(fp);
- 
- return 0;
-	
-}
-
-int LerArquivo()
-{
-	
-	FILE *fp;
- 	char c;
- 	
- fp = fopen("original.txt","r+");   /* Arquivo ASCII, para leitura */
- if(!fp)
- 
- {
-     printf( "Erro na abertura do arquivo");
-     exit(0);
- }
- 
- while((c = getc(fp) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
-    printf(" %c", c);                 /* imprime o caracter lido */
-    
- fclose(fp);
- 
- return 0;
-}
-
-
-int Criptografar()
-{
-	FILE *entrada;
-	FILE *saida;
-	char c;
-	char ch;
-	
- entrada = fopen("original.txt","r");
-    if(entrada == NULL)
-    {
-        printf("Arquivo Original não encontrado\n");
-    }
-    saida = fopen("criptografado.txt","w");
-    if(saida == NULL)
-    {
-        printf("Arquivo de saída não encontrado\n");
-    }
- 
- while((ch = getc(entrada) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
- {
-	ch = ch - (8 * 5 - 3) ;
-	fputc(ch, saida);
-	
- }  
- fclose(saida);
- 
- return 0;
-
-}
-
-int LerArquivoEncrip()
-{
-	FILE *fp;
- 	char c;
- 	
- fp = fopen("criptografado.txt","r+");   /* Arquivo ASCII, para leitura */
- if(!fp)
- 
- {
-     printf( "Erro na abertura do arquivo");
-     exit(0);
- }
- 
- while((c = getc(fp) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
-    printf(" %c", c);                 /* imprime o caracter lido */
-    
- fclose(fp);
- 
- return 0;
-}
-
-int Decriptografar()
-{
-	
-	FILE *entrada;
-	FILE *saida;
-	char c;
-	char ch;
-	
- entrada = fopen("criptografado.txt","r");
-    if(entrada == NULL)
-    {
-        printf("Arquivo original não encontrado\n");
-    }
-    saida = fopen("DEcriptografado.txt","w");
-    if(saida == NULL)
-    {
-        printf("Arquivo de saída não encontrado\n");
-    }
- 
- while((ch = getc(entrada) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
- {
-	ch = ch + (8 * 5 - 3);
-	fputc(ch, saida);
-	
- }  
- fclose(saida);
- 
- return 0;
-
-}
-
-int LerArquivoDEsencrip()
-{
-	FILE *fp;
- 	char c;
- 	
- fp = fopen("DEcriptografado.txt","r+");   /* Arquivo ASCII, para leitura */
- if(!fp)
- 
- {
-     printf( "Erro na abertura do arquivo");
-     exit(0);
- }
- 
- while((c = getc(fp) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
-    printf(" %c", c);                 /* imprime o caracter lido */
-    
- fclose(fp);
- 
- return 0;
-}
-
-int ConvArquivoASCII()
-{
-	
-	FILE *entrada;
-	FILE *saida;
-	char ch;
-	
- 	entrada = fopen("original.txt","r");
-    if(entrada == NULL)
-    {
-        printf("Arquivo original não encontrado\n");
-    }
-    
-	saida = fopen("originalASCII.txt","w");
-    if(saida == NULL)
-    {
-        printf("Arquivo de saída não encontrado\n");
-    }
- 	while((ch = getc(entrada) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
-	{
-	
-	printf("%d ", ch);    
-	fprintf(saida, "%d ", ch);    
+		setlocale(LC_ALL, "portuguese"); //Configuração de acentos
 		
- 	}  
+		 char encArq[2000];
+		 char novoencArq[2000];
+		 char decArq[2000];
+		 char novodecArq[2000];
 
-    fclose(saida);
- 
-	return 0;	
-}
+		 int Opcao;
 
-int LerArquivoASCII()
-{
-	FILE *saida;
-	char ch;
-	 	    
-	saida = fopen("originalASCII.txt","r+");
-    if(saida == NULL)
-    {
-        printf("Arquivo de saída não encontrado\n");
-    }
- 	while((ch = getc(saida) ) != EOF)      /* Enquanto não chegar ao final do arquivo */
-	{
+		 printf("\t\tNOTA: Cuidado com sobreposição de arquivos!!!\n\n");
+		 printf("Informe 1 para Encriptar:\n");
+		 printf("Informe 2 para Decriptar:\n");
+		 printf("0 para Sair\n\n==>");
+		 scanf("%d",&Opcao);
+
+		 switch(Opcao)
+		 {
+		 case 1:
+		 		 		 printf("Informe arquivo de entrada:  ");
+		 		 		 scanf("%s",&encArq);
+		 		 		 printf("Informe arquivo de saída:   ");
+		 		 		 scanf("%s",&novoencArq);
+		 		 		 Encrypt(encArq, novoencArq);
+		 		 break;
+		 case 2:
+		 		 		 printf("Informe arquivo de entrada:   ");
+		 		 		 scanf("%s",&decArq);
+		 		 		 printf("Informe arquivo de saída:   ");
+		 		 		 scanf("%s",&novodecArq);
+		 		 		 Decrypt(decArq, novodecArq);
+		 		 break;
+		 case 0:
+		 	            printf("Finalizando KeyGen...\n\n");
+						exit(0);
+				 break;
 	
-	printf("%c ", ch);    
-			
- 	}  
+		 }
 
-    fclose(saida);
- 
-	return 0;	
-	
-}
-
-int sair()
-{
-	printf("Finalizando SGC...");
-	exit(0);
-
+		 return 0;
 }
